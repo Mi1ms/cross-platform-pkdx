@@ -15,15 +15,18 @@ export default class SignUpScreen extends Component {
 
     handleSignUp = () => {
         const { email, psw, confirm_psw } = this.state;
-        console.log(psw, confirm_psw, email)
-        if (psw === confirm_psw && psw == '' ) {
+        if (psw === confirm_psw && psw !== '' ) {
+            console.log(psw, confirm_psw, email)
 
             Firebase.auth()
                 .createUserWithEmailAndPassword(email, psw)
                 .then(() => {
+                    console.log('so')
                     this.props.navigation.navigate('Profile')
                 })
-                .catch(error => console.log(error))
+                .catch(error => {
+                    console.log(error)
+                });
         }
     }
 

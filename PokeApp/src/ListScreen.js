@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
    alignItems: "center",
   },
   title: {
-    fontFamily: 'Cochin',
+    // fontFamily: 'Cochin',
     fontSize: 44,
   },
   item: {

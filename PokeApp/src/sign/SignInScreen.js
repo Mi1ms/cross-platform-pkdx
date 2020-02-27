@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, Button, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, Button, View } from 'react-native';
+import Firebase from '../../firebase/init_firebase';
 
 export default class SignInScreen extends Component {
     constructor(props) {
@@ -10,10 +11,23 @@ export default class SignInScreen extends Component {
         }
     }
 
+    handleLogIn = () => {
+        const { email, psw } = this.state;
+        console.log('hehr')
+        Firebase.auth()
+            .signInWithEmailAndPassword(email, psw)
+            .then((result) => {
+                console.log('so', result)
+                this.props.navigation.navigate('Profile')
+            })
+            .catch(error => {
+                console.log(error)
+            });
+    }
+
     render() {
         return (
             <View >
-                <Text>connect toi</Text>
                 <TextInput
                     style={styles.inputBox}
                     value={this.state.email}
@@ -28,7 +42,10 @@ export default class SignInScreen extends Component {
                     placeholder='Mot de passe'
                     secureTextEntry={true}
                 />
-                <Button title='Co' onPress={() => console.log('cmon')}/>
+                <TouchableOpacity style={styles.button} onPress={this.handleLogIn}>
+                    <Text>CONNECT TOI!</Text>
+                </TouchableOpacity>
+
             </View>
         )
     }
