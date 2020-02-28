@@ -10,8 +10,8 @@ export default class ListScreen extends Component {
         }
     }
   
-    componentWillMount() {
-        fetch(`${this.state.api}pokemon`)
+    componentDidMount() {
+        fetch(`${this.state.api}pokemon?limit=100`)
         .then((response) => response.json())
         .then((res) => {
             this.setState({

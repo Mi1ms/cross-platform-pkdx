@@ -11,10 +11,9 @@ export default class PokemonScreen extends Component {
             title: item.name,
             info: []
         };
-        this.componentWillMount()
     }
 
-    componentWillMount() {
+    componentDidMount() {
         fetch(`${ this.state.api }`)
         .then((response) => response.json())
         .then((res) => {

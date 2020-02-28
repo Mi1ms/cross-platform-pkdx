@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Firebase from '../../firebase/init_firebase';
+import Firebase, { db } from '../../firebase/init_firebase';
+import { AsyncStorage } from 'react-native';
 import { StyleSheet, Text, TextInput, Button, TouchableOpacity, View } from 'react-native';
 
 export default class SignUpScreen extends Component {
@@ -14,19 +15,44 @@ export default class SignUpScreen extends Component {
     }
 
     handleSignUp = () => {
-        const { email, psw, confirm_psw } = this.state;
-        if (psw === confirm_psw && psw !== '' ) {
-            console.log(psw, confirm_psw, email)
+        const { email, psw, confirm_psw, name } = this.state;
+        const { navigation } = this.props;
 
+        if (psw === confirm_psw && psw !== '' && name !== '') {
+            
             Firebase.auth()
-                .createUserWithEmailAndPassword(email, psw)
-                .then(() => {
-                    console.log('so')
-                    this.props.navigation.navigate('Profile')
-                })
-                .catch(error => {
-                    console.log(error)
-                });
+            .createUserWithEmailAndPassword(email, psw)
+            .then(function(response) {
+                console.log(response)
+                if (response.user.uid) {
+                    const user = {
+                        uid: response.user.uid,
+                        name,
+                        email,
+                    }
+    
+                    db.collection('users')
+                        .doc(response.user.uid)
+                        .set(user)
+
+                    // /!\ rajouter verification status && error msg
+                    this._userData;
+                    navigation.navigate('WishList')
+                }   
+                
+            })
+            .catch(error => {
+                console.log(error)
+            });
+        }
+    }
+
+    _userData = async () =>  {
+        const { email, psw, name } = this.state;
+        try {
+            await AsyncStorage.setItem('user', {email, name});
+        } catch (err) {
+            console.error(err);
         }
     }
 
@@ -62,6 +88,7 @@ export default class SignUpScreen extends Component {
                     placeholder='Confirmer mot de passe'
                     secureTextEntry={true}
                 />
+                <Button title="Déjà inscrit" onPress={ () => this.props.navigation.navigate('SignIn')}/>
                 <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
                     <Text>Go!</Text>
                 </TouchableOpacity>

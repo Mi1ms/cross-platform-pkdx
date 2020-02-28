@@ -1,28 +1,48 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, Button, View } from 'react-native';
 import Firebase from '../../firebase/init_firebase';
+import {AsyncStorage} from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, Button, View } from 'react-native';
 
 export default class SignInScreen extends Component {
+    
     constructor(props) {
         super(props);
         this.state = {
             email: '',
             psw: '',
         }
+
+        this.handleLogIn = this.handleLogIn.bind(this);
     }
 
     handleLogIn = () => {
         const { email, psw } = this.state;
-        console.log('hehr')
+        const { navigation } = this.props;
+        console.log(this.props)
+
         Firebase.auth()
             .signInWithEmailAndPassword(email, psw)
-            .then((result) => {
+            .then(function(result) {
                 console.log('so', result)
-                this.props.navigation.navigate('Profile')
+                if (!result.message) {
+                    AsyncStorage.setItem('username', name);
+                    AsyncStorage.setItem('email', email);
+                    navigation.navigate('WishList')
+                } else {
+                    console.error(result.message)
+                }
             })
             .catch(error => {
                 console.log(error)
             });
+    }
+
+    _userData = async () => {
+        try {
+            console.log('set info')    
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     render() {
@@ -42,6 +62,7 @@ export default class SignInScreen extends Component {
                     placeholder='Mot de passe'
                     secureTextEntry={true}
                 />
+                <Button title="S'inscrire" onPress={ () => this.props.navigation.navigate('SignUp')}/>
                 <TouchableOpacity style={styles.button} onPress={this.handleLogIn}>
                     <Text>CONNECT TOI!</Text>
                 </TouchableOpacity>

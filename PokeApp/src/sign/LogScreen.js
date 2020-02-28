@@ -1,27 +1,25 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, Button, View } from 'react-native';
+import { StyleSheet, Text, Button, View} from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
+import WishListScreen from '../WishListScreen';
 
+const Stack = createStackNavigator();
 export default class LogScreen extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            api: 'https://pokeapi.co/api/v2/',
-            signIn: true,
-        }
+        
     }
     
     render() {
             
         return (
-            <View >
-                <View style={styles.container}>
-                    <Button style={styles.btn} title='Connexion' onPress={() => this.setState({signIn: true})}/>
-                    <Button style={styles.btn} title='Inscription' onPress={() => this.setState({signIn: false})}/>
-                </View>
-                { this.state.signIn ? <SignInScreen/> : <SignUpScreen/> }
-            </View>
+            <Stack.Navigator initialRouteName='SignIn'>
+                <Stack.Screen name="SignIn" component={SignInScreen} />
+                <Stack.Screen name="SignUp" component={SignUpScreen} />
+                <Stack.Screen name="WishList" component={WishListScreen} />
+            </Stack.Navigator>
         )
     }
 
