@@ -18,15 +18,13 @@ export default class SignInScreen extends Component {
     handleLogIn = () => {
         const { email, psw } = this.state;
         const { navigation } = this.props;
-        console.log(this.props)
 
         Firebase.auth()
             .signInWithEmailAndPassword(email, psw)
             .then(function(result) {
                 console.log('so', result)
                 if (!result.message) {
-                    AsyncStorage.setItem('username', name);
-                    AsyncStorage.setItem('email', email);
+                    AsyncStorage.setItem('user', JSON.stringify(result.user));
                     navigation.navigate('WishList')
                 } else {
                     console.error(result.message)

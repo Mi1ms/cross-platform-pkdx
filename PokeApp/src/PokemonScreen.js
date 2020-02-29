@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, Text, View } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import TypeScreen from './TypeScreen';
 
 export default class PokemonScreen extends Component {
@@ -9,14 +10,18 @@ export default class PokemonScreen extends Component {
         this.state = {
             api: item.url,
             title: item.name,
+            addWish: false,
             info: []
         };
+
+        this.toggleWishList = this.toggleWishList.bind(this);
     }
 
     componentDidMount() {
         fetch(`${ this.state.api }`)
         .then((response) => response.json())
         .then((res) => {
+            console.log(res)
             this.setState({
                 info: res,
             });
@@ -26,16 +31,31 @@ export default class PokemonScreen extends Component {
         })
     }
     
-    listType() {
-        this.state.info.types.maps(elem => {
-            console.log(elem)
-        })
+    inWishList() {
+        const docRef = db.collection('wishlist');
+        const { id } = this.state.info;
+        const Pokemon = docRef.set({
+        pokemonId: id,
+        userId: 'Lovelace',
+        });
+    }
+
+    toggleWishList() {
+
     }
 
     render() {
         return (
             <View>
-
+                <TouchableOpacity onPress={this.toggleWishList()}>
+                    <Icon
+                    name={this.state.addWish ? 'star' : 'star-o'}
+                    size={35}
+                    color="#ffcb2b"
+                    />
+                </TouchableOpacity>
+                {/* <Image style={{width: 66, height: 58}}
+                source={{uri: `${ this.state.info.sprites.back_default}`}}/> */}
                 <Text>{ this.state.title } N.{ this.state.info.order }</Text>
                 <Text>Height : { this.state.info.height }</Text>
                 <Text>Weight : { this.state.info.weight }</Text>
