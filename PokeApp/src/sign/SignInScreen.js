@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Firebase from '../../firebase/init_firebase';
-import {AsyncStorage} from 'react-native';
+import {AsyncStorage, TouchableOpacityBase} from 'react-native';
 import { StyleSheet, Text, TextInput, TouchableOpacity, Button, View } from 'react-native';
 
 export default class SignInScreen extends Component {
@@ -45,7 +45,7 @@ export default class SignInScreen extends Component {
 
     render() {
         return (
-            <View >
+            <View style={styles.container}>
                 <TextInput
                     style={styles.inputBox}
                     value={this.state.email}
@@ -60,7 +60,6 @@ export default class SignInScreen extends Component {
                     placeholder='Mot de passe'
                     secureTextEntry={true}
                 />
-                <Button title="S'inscrire" onPress={ () => this.props.navigation.navigate('SignUp')}/>
                 <TouchableOpacity style={styles.button} onPress={this.handleLogIn}>
                     <Text>CONNECT TOI!</Text>
                 </TouchableOpacity>
@@ -105,5 +104,16 @@ const styles = StyleSheet.create({
     },
     buttonSignup: {
         fontSize: 12
+    },
+    link: {
+        marginTop: 30,
+        marginBottom: 20,
+        paddingVertical: 5,
+        alignItems: 'center',
+        backgroundColor: '#fdeb5a',
+        borderColor: '#fdeb5a',
+        borderWidth: 1,
+        borderRadius: 5,
+        width: 200
     }
 })

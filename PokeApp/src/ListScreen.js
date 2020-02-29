@@ -29,13 +29,14 @@ export default class ListScreen extends Component {
     }
 
     searchList(input) {
-      this.setState({'search': input}) 
       const listing = this.state.pokemon.filter(elem => {
-        return elem.name.includes(input);
+        return elem.name.includes(input.toLowerCase());
       })
+      
       this.setState({
         list: listing,
       });
+      this.setState({'search': input}) 
     }
     
     render() {
@@ -45,7 +46,7 @@ export default class ListScreen extends Component {
         style={styles.input} 
         inlineImageLeft='search_icon'
         value={this.state.search}
-        onChangeText={(text)=> { this.searchList(text) }}
+        onChangeText={text => { this.searchList(text) }}
         />
         <FlatList data={ this.state.list }
             style={styles.list}
@@ -80,7 +81,9 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 10,
     height: 44,
+    width: 370,
     backgroundColor: "#ffffff",
     borderRadius: 5,
+    justifyContent: "center"
   },
 })

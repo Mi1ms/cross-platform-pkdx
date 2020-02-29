@@ -5,7 +5,6 @@ import SignInScreen from './SignInScreen';
 import SignUpScreen from './SignUpScreen';
 import WishListScreen from '../WishListScreen';
 
-const Stack = createStackNavigator();
 export default class LogScreen extends Component {
     constructor(props) {
         super(props);
@@ -15,11 +14,8 @@ export default class LogScreen extends Component {
     render() {
             
         return (
-            <Stack.Navigator initialRouteName='SignIn'>
-                <Stack.Screen name="SignIn" component={SignInScreen} />
-                <Stack.Screen name="SignUp" component={SignUpScreen} />
-                <Stack.Screen name="WishList" component={WishListScreen} />
-            </Stack.Navigator>
+            <Text>Soon</Text>
+           
         )
     }
 
@@ -35,7 +31,9 @@ const styles = StyleSheet.create({
       paddingBottom: 100
     },
     btn: {
-        width: "50%"
+        width: "50%",
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
   

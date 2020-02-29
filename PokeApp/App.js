@@ -6,12 +6,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import {AsyncStorage} from 'react-native';
 // IMPORT Component 
 import Root from './src/Root';
+import SignUpScreen from './src/sign/SignUpScreen';
+import SignInScreen from './src/sign/SignInScreen';
 import LogScreen from './src/sign/LogScreen';
 import WishListScreen from './src/WishListScreen';
 
 const Drawer = createDrawerNavigator();
-const logDrawer = <Drawer.Screen name="Sign" component={LogScreen} options={{title: 'SignIn / SignUp'}} />
-const wishDrawer = <Drawer.Screen name="WishList" component={WishListScreen}/>
+const logOutDrawer = <Drawer.Screen name="LogOut" component={LogScreen} options={{title: 'SignIn / SignUp'}} />
 
 
 export default class App extends Component {
@@ -20,20 +21,17 @@ export default class App extends Component {
     super(props);
     this.state = {
       user: false,
-    }
-
-    console.log('constructor APP')
-    this.getData();
+    }    
   }
   
-  async getData() {
-    // const value = await AsyncStorage.getItem('user');
-    await AsyncStorage.getItem('email', (err, result) => {
+  componentDidMount() {
+    AsyncStorage.getItem('user', (err, result) => {
       const value  = result !== null ? true : false;
-      console.log(result)
       this.setState({'user': value });
     })
   }
+
+ 
 
    render() {
     
@@ -41,11 +39,18 @@ export default class App extends Component {
       <NavigationContainer style={styles.container} >
         <Drawer.Navigator initialRouteName='List'>
           <Drawer.Screen 
-          name="List" 
-          component={Root}
-          options={{title: 'List Pokemon'}} 
+            name="List" 
+            component={Root}
+            options={{title: 'List Pokemon'}} 
+            />
+          <Drawer.Screen 
+            name={this.state.user ? 'wish' : 'SignIn'}
+            component={this.state.user ? WishListScreen : SignInScreen}
           />
-          { this.state.user ? wishDrawer : logDrawer}
+          <Drawer.Screen 
+            name={this.state.user ? 'LogOut' : 'SignUp'}
+            component={this.state.user ? LogScreen : SignUpScreen}
+          />
         </Drawer.Navigator>
       </NavigationContainer>
     )

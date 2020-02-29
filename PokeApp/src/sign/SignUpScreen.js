@@ -12,6 +12,8 @@ export default class SignUpScreen extends Component {
             psw: '',
             confirm_psw: '',
         }
+
+        this.handleSignUp = this.handleSignUp.bind(this);
     }
 
     handleSignUp = () => {
@@ -58,8 +60,7 @@ export default class SignUpScreen extends Component {
 
     render() {
         return (
-            <View >
-                <Text>Inscit toi</Text>
+            <View style={styles.container}>
                 <TextInput
                     style={styles.inputBox}
                     value={this.state.name}
@@ -88,7 +89,8 @@ export default class SignUpScreen extends Component {
                     placeholder='Confirmer mot de passe'
                     secureTextEntry={true}
                 />
-                <Button title="Déjà inscrit" onPress={ () => this.props.navigation.navigate('SignIn')}/>
+               
+                
                 <TouchableOpacity style={styles.button} onPress={this.handleSignUp}>
                     <Text>Go!</Text>
                 </TouchableOpacity>
