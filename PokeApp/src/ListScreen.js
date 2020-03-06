@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { StyleSheet, FlatList, Modal, Text, TextInput, Product, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, FlatList, Modal, Text, TextInput, Product, View, Alert, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { AsyncStorage } from 'react-native';
+import Firebase, { db } from '../firebase/init_firebase';
+
 
 export default class ListScreen extends Component {
     constructor(props) {
@@ -8,24 +12,58 @@ export default class ListScreen extends Component {
           api: 'https://pokeapi.co/api/v2/',
           list: [],
           pokemon: [],
+          wishList: [],
           search: '',
+          user: null
       }
 
-      this.searchList = this.searchList.bind(this)
+      // provisoire 
+      Firebase.auth().onAuthStateChanged(user => {
+        this.setState({user });
+      });
+
+      this.searchList = this.searchList.bind(this);
+      this.inWish = this.inWish.bind(this);
     }
-  
+    
     componentDidMount() {
-        fetch(`${this.state.api}pokemon?limit=200`)
-        .then((response) => response.json())
-        .then((res) => {
-            this.setState({
-                pokemon: res.results,
-                list: res.results,
-            });
+      fetch(`${this.state.api}pokemon?limit=200`)
+      .then((response) => response.json())
+      .then((res) => {
+        this.setState({
+          pokemon: res.results,
+          list: res.results,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      })
+      
+      AsyncStorage.getItem('wishlist', (err, result) => {
+        this.setState({
+          wishList: [...result]
         })
-        .catch((err) => {
-            console.error(err);
-        })
+      });
+    }
+    
+    toggleWishList(name) {
+      console.log(this.state.user);
+      
+      if (this.state.user !== null) {
+          const Pokemon = {
+          pokemonName: name,
+          userId: this.state.user,
+          };
+          AsyncStorage.mergeItem('wishlist', JSON.stringify(Pokemon))
+      } else {
+          Alert.alert("IL FAUT SE CONNECTER D'ABORD");
+          console.log('need to be connected')
+          return false;
+      }
+    }
+    
+    inWish(pokemon) {
+      console.log(this.state.wishList);
     }
 
     searchList(input) {
@@ -40,27 +78,32 @@ export default class ListScreen extends Component {
     }
     
     render() {
-    return (
-      <View style={styles.container}>
-        <TextInput placeholder='Recherche'
-        style={styles.input} 
-        inlineImageLeft='search_icon'
-        value={this.state.search}
-        onChangeText={text => { this.searchList(text) }}
-        />
-        <FlatList data={ this.state.list }
-            style={styles.list}
-            renderItem={ ({item}) => 
+      return (
+        <View style={styles.container}>
+          <TextInput placeholder='Recherche'
+          style={styles.input} 
+          inlineImageLeft='search_icon'
+          value={this.state.search}
+          onChangeText={text => { this.searchList(text) }}
+          />
+          <FlatList data={ this.state.list }
+              style={styles.list}
+              renderItem={ ({item}) => 
                 <TouchableOpacity style={styles.item}
-                onPress={ () => this.props.navigation.navigate('Details', { item }) }>
+                  onPress={ () => this.props.navigation.navigate('Details', { item }) }>
                   <Text>{ item.name }</Text>
+                    <TouchableOpacity onPress={ () => { this.toggleWishList(item.name) }}>
+                      <Icon
+                        name={this.inWish(item.name) ? 'star' : 'star-o'}
+                        size={35}
+                        color="#ffcb2b"
+                      />
+                    </TouchableOpacity>
                 </TouchableOpacity>
-              
-            }
-        />
-      </View>
-
-    );
+              }
+          />
+        </View>
+      );
   }
 }
 

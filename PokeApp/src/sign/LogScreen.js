@@ -8,7 +8,11 @@ import WishListScreen from '../WishListScreen';
 export default class LogScreen extends Component {
     constructor(props) {
         super(props);
-        
+        this.logOut();
+    }
+    
+    logOut() {
+
     }
     
     render() {

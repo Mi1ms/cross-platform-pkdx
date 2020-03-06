@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Image, Text, View, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Firebase, { db } from '../firebase/init_firebase';
-
 const PokemonGif = require('pokemon-gif');
 
 export default class PokemonScreen extends Component {
@@ -12,13 +11,9 @@ export default class PokemonScreen extends Component {
         this.state = {
             api: item.url,
             title: item.name,
-            gif: '',
-            addWish: false,
             info: [], 
             user: null,
         };
-
-        this.toggleWishList = this.toggleWishList.bind(this);
     
     }
 
@@ -37,24 +32,6 @@ export default class PokemonScreen extends Component {
             console.error(err);
         })
     }
-    
-    inWishList() {
-        if (this.state.user !== null) {
-            
-            const docRef = db.collection('wishlist');
-            const { id } = this.state.info;
-            const Pokemon = docRef.set({
-            pokemonId: id,
-            userId: this.state.user,
-            });
-        } else {
-            Alert.alert("IL FAUT SE CONNECTER D'ABORD");
-        }
-    }
-
-    toggleWishList() {
-        
-    }
 
     render() {
         return (
@@ -62,13 +39,7 @@ export default class PokemonScreen extends Component {
                 <Text style={styles.title}>{ this.state.title } N.{ this.state.info.order }</Text>
                 <Image style={{width: 240, height: 200}}
                 source={{uri: `${ this.state.gif}`}}/>
-                <TouchableOpacity onPress={this.toggleWishList()}>
-                    <Icon
-                    name={this.state.addWish ? 'star' : 'star-o'}
-                    size={35}
-                    color="#ffcb2b"
-                    />
-                </TouchableOpacity>
+                
                 <Text style={styles.txt}>Height : { this.state.info.height }</Text>
                 <Text style={styles.txt}>Weight : { this.state.info.weight }</Text>
                 {/* Pokemon Type View  */}
